@@ -28,23 +28,18 @@ function BoardRow({ row, values, handleClick }) {
   );
 }
 
-function Board({ player, switchPlayer }) {
+function Board({ player, squares, onPlay }) {
   // store each squares status in the parent
-  const [squares, setSquares] = useState(Array(9).fill(""));
-  const [prevSquares, setPrev] = useState(Array(9).fill(""));
-
   let title = player + " Player Go!";
   if (solved(squares)) title = player + " Wins!";
 
   function handleClick(i) {
-    // only allow players to change empty cells
-    if (!solved(squares) && squares[i] == "") {
-      const nextSquares = squares.slice();
-      nextSquares[i] = player;
-      setPrev(squares);
-      setSquares(nextSquares);
-      if (!solved(nextSquares)) switchPlayer();
-    }
+    // only allow players to change empty cells when board playable
+    if (solved(squares) || squares[i] != "") return;
+    const nextSquares = squares.slice();
+    if (player == "X") nextSquares[i] = "X";
+    else nextSquares[i] = "O";
+    onPlay(nextSquares, solved(nextSquares));
   }
 
   // check if a 3x3 tic-tac-toe board is solved
@@ -80,7 +75,7 @@ function Board({ player, switchPlayer }) {
 
   return (
     <>
-      <Title message={title} />
+      <h2>{title}</h2>
       <BoardRow
         row={0}
         values={squares.slice(0, 3)}
@@ -100,19 +95,60 @@ function Board({ player, switchPlayer }) {
   );
 }
 
-function Title({ message }) {
-  return <h2>{message}</h2>;
+function History({ history, goBack }) {
+  const moves = history.map((board, move) => {
+    let description = "Go to Move " + (move + 1);
+
+    return (
+      <li key={move}>
+        <button onClick={() => goBack(move)}>{description}</button>
+      </li>
+    );
+  });
+
+  return <>{moves}</>;
 }
 
-function App() {
+function Game() {
   const [player, setPlayer] = useState("X");
+  const [history, setHistory] = useState([Array(9).fill("")]);
+  const curBoard = history[history.length - 1];
 
   function switchPlayer() {
     if (player == "X") setPlayer("O");
     else setPlayer("X");
   }
 
-  return <Board player={player} switchPlayer={switchPlayer} />;
+  function onPlay(newBoard, solved) {
+    setHistory([...history, newBoard]);
+    if (!solved) {
+      if (player == "X") setPlayer("O");
+      else setPlayer("X");
+    }
+  }
+
+  function goBack(move) {
+    if (move % 2 == 0) setPlayer("X");
+    else setPlayer("O");
+    setHistory(history.slice(0, move + 1));
+  }
+
+  return (
+    <div className="game">
+      <div className="board">
+        <Board player={player} squares={curBoard} onPlay={onPlay} />
+      </div>
+      <div className="game-info">
+        <ol>
+          <History history={history} goBack={goBack} />
+        </ol>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return <Game />;
 }
 
 export default App;
