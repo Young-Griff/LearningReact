@@ -1,34 +1,43 @@
 import { useState } from "react";
 import "./App.css";
 
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, winner }) {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button
+      className={"square" + (winner ? " win-sq" : "")}
+      onClick={onSquareClick}
+    >
       {value}
     </button>
   );
 }
 
-function BoardRow({ row, values, handleClick }) {
+function BoardRow({ row, values, handleClick, winSqs }) {
   return (
     <div>
       <Square
         value={values[0]}
         onSquareClick={() => handleClick(row * 3 + 0)}
+        winner={winSqs.includes(row * 3 + 0)}
       />
       <Square
         value={values[1]}
         onSquareClick={() => handleClick(row * 3 + 1)}
+        winner={winSqs.includes(row * 3 + 1)}
       />
       <Square
         value={values[2]}
         onSquareClick={() => handleClick(row * 3 + 2)}
+        winner={winSqs.includes(row * 3 + 2)}
       />
     </div>
   );
 }
 
 function Board({ player, squares, onPlay }) {
+  // track squares that constitute a set of 3
+  const [winSqs, setWinSqs] = useState([-100, -100, -100]);
+  
   // store each squares status in the parent
   let title = player + " Player Go!";
   if (solved(squares)) title = player + " Wins!";
@@ -39,19 +48,22 @@ function Board({ player, squares, onPlay }) {
     const nextSquares = squares.slice();
     if (player == "X") nextSquares[i] = "X";
     else nextSquares[i] = "O";
-    onPlay(nextSquares, solved(nextSquares));
+    onPlay(nextSquares, solved(nextSquares, true));
+    console.log(winSqs);
   }
 
   // check if a 3x3 tic-tac-toe board is solved
-  function solved(board) {
+  function solved(board, update=false) {
     // check rows
     for (let i = 0; i < 9; i += 3) {
       if (
         board[i] != "" &&
         board[i] == board[i + 1] &&
         board[i] == board[i + 2]
-      )
+      ) {
+        if(update) setWinSqs([i, i + 1, i + 2]);
         return true;
+      }
     }
 
     // check columns
@@ -60,16 +72,22 @@ function Board({ player, squares, onPlay }) {
         board[i] != "" &&
         board[i] == board[i + 3] &&
         board[i] == board[i + 6]
-      )
+      ) {
+        if(update) setWinSqs([i, i + 3, i + 6]);
         return true;
+      }
     }
 
     // check diagonals
-    if (board[0] != "" && board[0] == board[4] && board[0] == board[8])
+    if (board[0] != "" && board[0] == board[4] && board[0] == board[8]) {
+      if(update) setWinSqs([0, 4, 8]);
       return true;
-    if (board[2] != "" && board[2] == board[4] && board[2] == board[6])
+    }
+    if (board[2] != "" && board[2] == board[4] && board[2] == board[6]) {
+      if(update) setWinSqs([2, 4, 6]);
       return true;
-
+    }
+    if (!winSqs.includes(-100)) setWinSqs(Array(3).fill(-100));
     return false;
   }
 
@@ -80,16 +98,19 @@ function Board({ player, squares, onPlay }) {
         row={0}
         values={squares.slice(0, 3)}
         handleClick={handleClick}
+        winSqs={winSqs}
       />
       <BoardRow
         row={1}
         values={squares.slice(3, 6)}
         handleClick={handleClick}
+        winSqs={winSqs}
       />
       <BoardRow
         row={2}
         values={squares.slice(6, 9)}
         handleClick={handleClick}
+        winSqs={winSqs}
       />
     </>
   );
@@ -101,7 +122,11 @@ function History({ history, goBack }) {
 
     return (
       <li key={move}>
-        <button onClick={() => goBack(move)}>{description}</button>
+        {move < history.length - 1 ? (
+          <button onClick={() => goBack(move)}>{description}</button>
+        ) : (
+          "You are on move " + (move + 1)
+        )}
       </li>
     );
   });
@@ -136,7 +161,11 @@ function Game() {
   return (
     <div className="game">
       <div className="board">
-        <Board player={player} squares={curBoard} onPlay={onPlay} />
+        <Board
+          player={player}
+          squares={curBoard}
+          onPlay={onPlay}
+        />
       </div>
       <div className="game-info">
         <ol>
