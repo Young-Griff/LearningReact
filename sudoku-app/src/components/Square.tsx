@@ -1,3 +1,7 @@
-function Square() {}
+function Square() {
 
-export default Square();
+    return <div>Test</div>;
+
+}
+
+export default Square;
