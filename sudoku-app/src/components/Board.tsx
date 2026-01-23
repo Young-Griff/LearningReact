@@ -1,6 +1,6 @@
 import Block from "./Block.tsx";
 
-function Board(squares: number[], onSquareChange: ()=>void) {
+function Board({squares, onSquareChange}) {
     return <Block squares={squares} onSquareChange={onSquareChange}/>;
 }
 

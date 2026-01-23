@@ -1,6 +1,6 @@
-function Square() {
+function Square({squares, onSquareChange}) {
 
-    return <div>Test</div>;
+    return <input type="text" />;
 
 }
 

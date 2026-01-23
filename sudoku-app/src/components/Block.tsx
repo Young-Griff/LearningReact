@@ -1,8 +1,8 @@
 import Square from "./Square.tsx";
 
-function Block() {
+function Block({squares, onSquareChange}) {
 
-    return <Square />;
+    return <Square squares={squares} onSquareChange={onSquareChange}/>;
 
 }
 

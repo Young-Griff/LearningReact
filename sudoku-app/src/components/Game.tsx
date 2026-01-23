@@ -9,7 +9,14 @@ function Game() {
     const newSquares = squares.slice();
     console.log("Squares: ", squares);
 
-    return <Board square={} onSquareChange={onSquareChange}/>;
+    function onSquareChange(i: number) {
+        const newSquares = squares.slice();
+        newSquares[i] = 0;
+        setSquares(newSquares);
+    }
+
+
+    return <Board squares={squares} onSquareChange={onSquareChange}/>;
 }
 
 export default Game;
