@@ -1,0 +1,18 @@
+input {
+    text-align: center;
+    color: rgb(39, 146, 213);
+    border-color: black;
+    border-style: solid;
+    border-radius: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    border-spacing: 0;
+    font-size: x-large;
+}
+
+.prefilled {
+    pointer-events: none;
+    color: black;
+}

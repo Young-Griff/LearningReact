@@ -1,6 +1,10 @@
-function Square({squares, onSquareChange}) {
+import "./Sqaure.css";
 
-    return <input type="text" />;
+function Square({sqNum, squares, onSquareChange}) {
+
+    const prefilled = ""
+
+    return <input id={sqNum} className={prefilled} type="text"/>;
 
 }
 
