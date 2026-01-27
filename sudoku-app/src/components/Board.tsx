@@ -1,23 +1,23 @@
 import Block from "./Block.tsx";
 import "./Board.css";
 
-function Board({squares, onSquareChange}) {
+function Board({getVal, onSquareChange}) {
     return (
         <div>
             <div className={"boardRow"}>
-                <Block blockNum={0} squares={squares} onSquareChange={onSquareChange}/>
-                <Block blockNum={1} squares={squares} onSquareChange={onSquareChange}/>
-                <Block blockNum={2} squares={squares} onSquareChange={onSquareChange}/>
+                <Block blockNum={0} getVal={getVal} onSquareChange={onSquareChange}/>
+                <Block blockNum={1} getVal={getVal} onSquareChange={onSquareChange}/>
+                <Block blockNum={2} getVal={getVal} onSquareChange={onSquareChange}/>
             </div>
             <div className={"boardRow"}>
-                <Block blockNum={3} squares={squares} onSquareChange={onSquareChange}/>
-                <Block blockNum={4} squares={squares} onSquareChange={onSquareChange}/>
-                <Block blockNum={5} squares={squares} onSquareChange={onSquareChange}/>
+                <Block blockNum={3} getVal={getVal} onSquareChange={onSquareChange}/>
+                <Block blockNum={4} getVal={getVal} onSquareChange={onSquareChange}/>
+                <Block blockNum={5} getVal={getVal} onSquareChange={onSquareChange}/>
             </div>
             <div className={"boardRow"}>
-                <Block blockNum={6} squares={squares} onSquareChange={onSquareChange}/>
-                <Block blockNum={7} squares={squares} onSquareChange={onSquareChange}/>
-                <Block blockNum={8} squares={squares} onSquareChange={onSquareChange}/>
+                <Block blockNum={6} getVal={getVal} onSquareChange={onSquareChange}/>
+                <Block blockNum={7} getVal={getVal} onSquareChange={onSquareChange}/>
+                <Block blockNum={8} getVal={getVal} onSquareChange={onSquareChange}/>
             </div>
         </div>
     );
