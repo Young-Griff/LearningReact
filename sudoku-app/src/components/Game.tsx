@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Board from "./Board";
 import Games from "../assets/boards.json";
+import Solver from "./Solver/Solver.tsx"
 
 // create an interface to pass to the board
 function Game() {
@@ -9,16 +10,16 @@ function Game() {
   const startBoard = Games.easyOne;
   const [squares, setSquares] = useState(Games.easyOne);
   // return the value of the given index (from current or initial board state)
-  function getVal(i, start = false) {
+  function getVal(i: number, start: boolean) {
     if (start == false) return squares[i];
     else return startBoard[i];
   }
   
   // update the board state given some input and the changed index
-  function onSquareChange(i, newVal) {
+  function onSquareChange(i: number, newVal: number) {
     const newSquares = squares.slice();
     newSquares[i] = newVal;
-    console.log("Solved: ", isSolved(newSquares));
+    console.log("Solved: ", Solver.isSolved(newSquares));
     setSquares(newSquares);
   }
 

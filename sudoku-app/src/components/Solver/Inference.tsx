@@ -1,6 +1,6 @@
 class Inference {
     // get the first cell in a 3x3 block 
-    static getBlockStart(cell) {
+    static getBlockStart(cell: number) {
         /* get row and col down to nearest multiple of 3 
            then compute first cell in block */
         let row = Math.floor(cell / 9);
@@ -10,7 +10,7 @@ class Inference {
         return row * 9 + col;
     }
     // carry out basic inference by checking rows and columns to narrow domain
-    static basicInference (board, domains) {
+    static basicInference (board: number[], domains: Set<number>[]) {
         for (let cell = 0; cell < 81; cell++) {
             if (board[cell] == 0) {
                 let seen = Array(9).fill(0);
@@ -27,7 +27,7 @@ class Inference {
                     if (index != cell && board[index] != 0) seen[board[index] - 1] += 1;
                 }
                 // check block that cell is in
-                let block = getBlockStart(cell);
+                let block = Inference.getBlockStart(cell);
                 for (let rAdj = 0; rAdj < 3; rAdj++) {
                     for (let cAdj = 0; cAdj < 3; cAdj++) {
                         let index = block + (rAdj * 9) + cAdj;
@@ -42,7 +42,7 @@ class Inference {
         }
     }
     // carry out higher level inference
-    static advancedInference (board, domain) {
+    static advancedInference (board: number[], domain: Set<number>[]) {
         // TODO
     }
 

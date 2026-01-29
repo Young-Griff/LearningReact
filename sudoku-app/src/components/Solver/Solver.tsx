@@ -53,15 +53,43 @@ class Solver {
     return minIndex;
   }
 
-  // helper functions
-  isValid() {
-    // check to see if an empty cell has an empty domain (i.e. no valid moves)
-    for (let cell = 0; cell < 81; cell++) {
-      if (this.board[cell] == 0 && this.domains[cell].size == 0) return false;
+  /* recursive solver first attempts inference then makes estimate of next move
+        returns the solved board
+  */
+  solve () : number[] { 
+
+    // check if the current board is valid
+    if (!this.isValid()) return this.board;
+    // continue making inferences as long as we can
+    let inferredMove = true;
+    while (inferredMove) {
+        this.updateDomains();
+        if (!this.definiteMove()) break;
     }
-    return true;
+    // if board is solved return it otherwise make estimate
+    if (Solver.isSolved(this.board)) return this.board;
+    else {
+        // get the cell to fill in first if it exists
+        let toUpdate = this.estimateMove();
+        if (toUpdate > -1) {
+            for (const val of this.domains[toUpdate].values()) {
+                // copy board
+                let boardCopy = Array(81).fill(0);
+                for (let i = 0; i < 81; i++) boardCopy[i] = this.board[i];
+                // update board copy for our choice
+                let numVal = val as number;
+                boardCopy[toUpdate] = numVal;
+                // try to solve if not come back here
+                let recSolver = new Solver(boardCopy);
+                let guessResult = recSolver.solve();
+                if (Solver.isSolved(guessResult)) return guessResult;
+            }
+        }
+    }  
+    return this.board;
   }
 
+  // helper functions
   static isSolved(board: number[]) {
     // check rows
     for (let r = 0; r < 9; r++) {
@@ -93,6 +121,49 @@ class Solver {
     // all rows, cols, and blocks fully (and properly) filled
     return true;
   }
+
+  // check if a board is valid given its domains and values
+  isValid() {
+    // check to see if an empty cell has an empty domain (i.e. no valid moves)
+    for (let cell = 0; cell < 81; cell++) {
+      if (this.board[cell] == 0 && this.domains[cell].size == 0) return false;
+    }
+    // check for duplicate values in rows, columns, and blocks
+    // check each row
+    for (let r = 0; r < 9; r++) {
+        let seen = Array(9).fill(0);
+        for (let i = 0; i < 9; i++) {
+            let val = this.board[r * 9 + i];
+            if (seen[val - 1] < 1) seen[val - 1] += 1;
+            else return false;
+        }    
+    }    
+    // check each column
+    for (let c = 0; c < 9; c++) {
+        let seen = Array(9).fill(0);
+        for (let i = 0; i < 9; i++) {
+            let val = this.board[c + 9 * i];
+            if (seen[val - 1] < 1) seen[val - 1] += 1;
+            else return false;
+        }    
+    }
+    // check block
+    for (let r = 0; r < 9; r = r + 3) {
+      for (let c = 0; c < 9; c = c + 3) {
+        let seen = Array(9).fill(0);
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            let val = this.board[(r + i) * 9 + c + j]; 
+            if (seen[val - 1] < 1) seen[val - 1] +=  1;
+            else return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
 }
 
 export default Solver;
