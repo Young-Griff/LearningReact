@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Board from "./Board";
 import Games from "../assets/boards.json";
-import Solver from "./Solver/Solver.tsx"
+import Solver from "./Solver/Solver.tsx";
 
 // create an interface to pass to the board
 function Game() {
@@ -14,13 +14,20 @@ function Game() {
     if (start == false) return squares[i];
     else return startBoard[i];
   }
-  
+
   // update the board state given some input and the changed index
   function onSquareChange(i: number, newVal: number) {
-    const newSquares = squares.slice();
-    newSquares[i] = newVal;
-    console.log("Solved: ", Solver.isSolved(newSquares));
-    setSquares(newSquares);
+    // handle movement
+    if (newVal == -1) {
+      // TODO: Select cell with id of passed i (index) value
+    }
+    // handle deletions or input
+    else {
+      const newSquares = squares.slice();
+      newSquares[i] = newVal;
+      console.log("Solved: ", Solver.isSolved(newSquares));
+      setSquares(newSquares);
+    }
   }
 
   return <Board getVal={getVal} onSquareChange={onSquareChange} />;
