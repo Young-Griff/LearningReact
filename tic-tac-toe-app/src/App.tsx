@@ -139,11 +139,6 @@ function Game() {
   const [history, setHistory] = useState([Array(9).fill("")]);
   const curBoard = history[history.length - 1];
 
-  function switchPlayer() {
-    if (player == "X") setPlayer("O");
-    else setPlayer("X");
-  }
-
   function onPlay(newBoard, solved) {
     setHistory([...history, newBoard]);
     if (!solved) {
