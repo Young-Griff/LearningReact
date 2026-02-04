@@ -7,8 +7,8 @@ import Solver from "./Solver/Solver.tsx";
 // create an interface to pass to the board
 function Game() {
   // set up components for the board
-  const startBoard = Games.easyOne;
-  const [squares, setSquares] = useState(Games.easyOne);
+  const startBoard = Games.trivial;
+  const [squares, setSquares] = useState(Games.trivial);
   // return the value of the given index (from current or initial board state)
   function getVal(i: number, start: boolean) {
     if (start == false) return squares[i];
@@ -20,6 +20,8 @@ function Game() {
     // handle movement
     if (newVal == -1) {
       // TODO: Select cell with id of passed i (index) value
+      const newCell = document.getElementById(i);
+      newCell.focus()
     }
     // handle deletions or input
     else {
