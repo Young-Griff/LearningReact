@@ -5,9 +5,10 @@ class Solver {
   domains: Set<number>[];
 
   constructor(board: number[]) {
-    this.board = board;
+    this.board = board.slice();
     // get a domain of available moves for each cell
-    this.domains = Array(81).fill(new Set<number>());
+    this.domains = Array(81);
+    for (let i = 0; i < 81; i++) this.domains[i] = new Set();
   }
 
   // carry out process of solving board
@@ -24,9 +25,13 @@ class Solver {
   definiteMove() {
     // simply pick first domain that has only 1 option
     for (let c = 0; c < 81; c++) {
-      if (this.domains[c].size == 1) {
+      if (this.board[c] == 0 && this.domains[c].size == 1) {
+        //console.log("Making Move: ", c, " to val ", this.domains[c]);
         const entries = this.domains[c].values();
-        this.board[c] = entries.next().value as number;
+        let newVal = entries.next().value as number;
+        //console.log("NewVal: ", newVal);
+        this.board[c] = newVal;
+        //console.log(this.board);
         return true;
       }
     }
@@ -57,18 +62,21 @@ class Solver {
         returns the solved board
   */
   solve () : number[] { 
-
+    
+    // if board is solved return it otherwise make estimate
+    if (Solver.isSolved(this.board)) return this.board;
     // check if the current board is valid
+    this.updateDomains();
+    //console.log(this.domains);
+    //console.log(this.isValid());
     if (!this.isValid()) return this.board;
     // continue making inferences as long as we can
     let inferredMove = true;
     while (inferredMove) {
         this.updateDomains();
-        if (!this.definiteMove()) break;
+        if (!this.definiteMove()) inferredMove = false;
     }
-    // if board is solved return it otherwise make estimate
-    if (Solver.isSolved(this.board)) return this.board;
-    else {
+    if (!Solver.isSolved(this.board)) {
         // get the cell to fill in first if it exists
         let toUpdate = this.estimateMove();
         if (toUpdate > -1) {
@@ -85,7 +93,7 @@ class Solver {
                 if (Solver.isSolved(guessResult)) return guessResult;
             }
         }
-    }  
+    }
     return this.board;
   }
 
@@ -134,8 +142,8 @@ class Solver {
         let seen = Array(9).fill(0);
         for (let i = 0; i < 9; i++) {
             let val = this.board[r * 9 + i];
-            if (seen[val - 1] < 1) seen[val - 1] += 1;
-            else return false;
+            if (val != 0 && seen[val - 1] < 1) seen[val - 1] += 1;
+            else if (val != 0) return false;
         }    
     }    
     // check each column
@@ -143,8 +151,8 @@ class Solver {
         let seen = Array(9).fill(0);
         for (let i = 0; i < 9; i++) {
             let val = this.board[c + 9 * i];
-            if (seen[val - 1] < 1) seen[val - 1] += 1;
-            else return false;
+            if (val != 0 && seen[val - 1] < 1) seen[val - 1] += 1;
+            else if (val != 0) return false;
         }    
     }
     // check block
@@ -154,8 +162,8 @@ class Solver {
         for (let i = 0; i < 3; i++) {
           for (let j = 0; j < 3; j++) {
             let val = this.board[(r + i) * 9 + c + j]; 
-            if (seen[val - 1] < 1) seen[val - 1] +=  1;
-            else return false;
+            if (val != 0 && seen[val - 1] < 1) seen[val - 1] +=  1;
+            else if (val != 0) return false;
           }
         }
       }

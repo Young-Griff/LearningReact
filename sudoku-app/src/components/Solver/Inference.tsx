@@ -34,9 +34,10 @@ class Inference {
                         if (index != cell && board[index] != 0) seen[board[index] - 1] += 1;
                     }
                 }
+                //console.log(seen);
                 // add available values to domain 
                 for (let i = 0; i < 9; i++) {
-                    if (seen[i] == 0) domains[cell].add(seen[i] + 1);
+                    if (seen[i] == 0) domains[cell].add(i + 1);
                 }
             }
         }
