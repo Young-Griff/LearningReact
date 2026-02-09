@@ -3,7 +3,7 @@ import "./Board.css";
 
 function Board({getVal, onSquareChange}) {
     return (
-        <div>
+        <div className="board">
             <div className={"boardRow"}>
                 <Block blockNum={0} getVal={getVal} onSquareChange={onSquareChange}/>
                 <Block blockNum={1} getVal={getVal} onSquareChange={onSquareChange}/>
