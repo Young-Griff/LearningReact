@@ -1,0 +1,43 @@
+.timer-display {
+    color: black;
+    border-style: solid;
+    border-color: black;
+    border-radius: 20%;
+    font-size: large;
+    background-color: lightblue;
+    width: 50px;
+    text-align: center;
+    vertical-align: center;
+    margin: auto;
+}
+
+.toolbar-div {
+    display: flex;
+    flex-direction:  row;
+    padding-bottom: 3px;
+}
+
+@media (max-width: 768px) {
+    .toolbar-button {
+    margin: auto;
+    border: solid;
+    border-color: black;
+    background-color: aliceblue;
+    color: rgb(39, 146, 213);
+    height: 50px;
+    width: 90px;
+    margin: 5px;
+}
+}
+
+@media (min-width: 768px) {
+    .toolbar-button {
+    margin: auto;
+    border: solid;
+    border-color: black;
+    background-color: aliceblue;
+    color: rgb(39, 146, 213);
+    height: 50px;
+    width: 100px;
+}
+}
