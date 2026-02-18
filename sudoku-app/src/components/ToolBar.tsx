@@ -66,12 +66,24 @@ function ToolBar ({history, setHistory, setSquares, solver}) {
 
 
   return (
-    <div className="toolbar-div">
-      <TimerDisplay />
-      <TimerButton />
-      <UnDoButton />
-      <SolveButton />
-    </div>);
+    <>
+      <div className="toolbar-narrow">
+        <div className="toolbar-narrow-row">
+        <TimerDisplay />
+        </div>
+        <div className="toolbar-narrow-row">
+          <TimerButton />
+          <UnDoButton />
+          <SolveButton />
+        </div>
+      </div>
+      <div className="toolbar-div">
+        <TimerDisplay />
+        <TimerButton />
+        <UnDoButton />
+        <SolveButton />
+      </div>
+    </>);
 
 }
 
